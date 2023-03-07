@@ -4,7 +4,9 @@ Challenge for interview RAVN
 
 ## 🌟 Features
 
-- ESLINT using standard style code
+- To enforce code style, we use ESLINT standard as code style. 
+
+
 - Authorization based on RBAC with two roles: CUSTOMER & MANAGER
 - Clean folder structure, commented code & API documentation with Swagger
 - Prisma Global Module, Singletons for S3 Upload Service & various utilities
