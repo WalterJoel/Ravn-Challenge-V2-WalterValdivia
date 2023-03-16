@@ -1,0 +1,4 @@
+dist
+node_modules
+# Aqui no excluimos package json otros porque eslint no es para todo tipo de archivos 
+# solo para js y jsx
