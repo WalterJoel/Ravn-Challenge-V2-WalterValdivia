@@ -1,7 +1,6 @@
-import * as product from './products.resolvers';
-
+import * as user from './users.resolvers';
 // Resolvers
-export const resolvers = {
+export default  {
 	Query: {
 		info: () => 'This is mi entry work',
 		getProduct: () => {
@@ -11,7 +10,11 @@ export const resolvers = {
 				hobbie: 'tirar',
 			};
 		},
-		product: product.findAll,
+		user: user.findAll,
+		
 	},
+	Mutation:{
+		addUser: user.addUser
+	}
 	// User: product.resolver,
 };

@@ -1,22 +1,39 @@
 scalar DateTime
+
 type Query {
 	info: String!
 	getProduct: Product
 	product: [User]
+	user: [User]
 }
+type Mutation {
+	addUser(dto: CreateUserDto!): User!
+}
+
 type Product {
 	id: ID!
 	name: String!
 	hobbie: String
 }
 
-type User {
-	id: ID
+# DTO for Create User
+input CreateUserDto {
 	email: String!
 	firstName: String!
 	lastName: String
-	password: String
-	roles: [UserRole]
+	password: String!
+	roles: [UserRole]!
+	createdAt: DateTime!
+	updatedAt: DateTime
+}
+
+type User {
+	id: ID!
+	email: String!
+	firstName: String!
+	lastName: String
+	password: String!
+	roles: [UserRole]!
 	createdAt: DateTime
 	updatedAt: DateTime
 }
