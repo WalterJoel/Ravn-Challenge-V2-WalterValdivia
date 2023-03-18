@@ -5,32 +5,29 @@ type Query {
 	getProduct: Product
 	product: [User]
 	user: [User]
+	findOne(id: ID!): Product
 }
 type Mutation {
-	addUser(dto: CreateUserDto!): User!
+	createUser(createUserDto: CreateUserDto!): User!
+	createProduct(createProductDto: CreateProductDto!): Product!
+	updateProduct(id: ID!, updateProductDto: UpdateProductDto!): Product!
+	deleteProduct(id: ID!): Product
 }
 
-type Product {
-	id: ID!
-	name: String!
-	hobbie: String
-}
-
-# DTO for Create User
+# DTO or INPUT for Create User
+# El server requiere si o si los campos obligatorios que tiene este input
 input CreateUserDto {
 	email: String!
 	firstName: String!
 	lastName: String
 	password: String!
 	roles: [UserRole]!
-	createdAt: DateTime!
-	updatedAt: DateTime
 }
 
 type User {
 	id: ID!
 	email: String!
-	firstName: String!
+	firstName: String
 	lastName: String
 	password: String!
 	roles: [UserRole]!
@@ -41,3 +38,91 @@ enum UserRole {
 	MANAGER
 	CLIENT
 }
+
+type Product {
+	id: ID!
+	name: String
+	description: String!
+	category: String
+	price: Float
+	stock: Int
+	isVisible: Boolean
+	createdAt: DateTime
+	updatedAt: DateTime
+	#   CartItem    :CartItem[]
+	#   OrderItem   :OrderItem[]
+	#   Like        :Like[]
+	#   images      :[ProductImage]
+}
+# input type of createProduct
+input CreateProductDto {
+	name: String!
+	description: String
+	category: String!
+	price: Float!
+	stock: Int!
+}
+
+# input type of updateProduct
+input UpdateProductDto {
+	name: String!
+	description: String
+	category: String!
+	price: Float!
+	stock: Int!
+	isVisible: Boolean!
+}
+
+# type ProductImage {
+#   id        :Int
+#   url       :String
+#   productId :Int
+# }
+
+# model Like {
+#   id        Int      @id @default(autoincrement())
+#   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+#   userId    Int
+#   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+#   productId Int
+#   createdAt DateTime @default(now())
+#   updatedAt DateTime @default(now())
+# }
+
+# model Cart {
+#   id        Int        @id @default(autoincrement())
+#   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+#   userId    Int        @unique
+#   items     CartItem[]
+#   createdAt DateTime   @default(now())
+#   updatedAt DateTime   @default(now())
+# }
+
+# model CartItem {
+#   id        Int     @id @default(autoincrement())
+#   cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+#   cartId    Int
+#   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+#   productId Int
+#   quantity  Int
+# }
+
+# model Order {
+#   id        Int         @id @default(autoincrement())
+#   user      User        @relation(fields: [userId], references: [id])
+#   userId    Int
+#   items     OrderItem[]
+#   total     Float
+#   createdAt DateTime    @default(now())
+#   updatedAt DateTime    @default(now())
+# }
+
+# model OrderItem {
+#   id       :ID!
+#   order     :Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+#   orderId   :Int
+#   product   :Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+#   productId :Int
+#   price     :Float
+#   quantity  :Int
+# }

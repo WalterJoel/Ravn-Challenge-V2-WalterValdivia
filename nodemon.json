@@ -1,12 +1,9 @@
 {
-    "ignore":[
-        ".git",
-        "node_modules/**/node_modules"
-    ],
-    "watch":[
-        "src/**/*.js",
-        "src/**/*.graphql",
-        "src/**/*.gpl"
-    ],
-    "ext":"js,json,graphql"
+  "ignore": [".git", "node_modules/**/node_modules"],
+  "watch": [
+    "src/**/*.js",
+    "src/graphql/schema.graphql",
+    "src/graphql/resolvers"
+  ],
+  "ext": "js,json,graphql,ts"
 }

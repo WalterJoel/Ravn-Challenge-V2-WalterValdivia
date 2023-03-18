@@ -1,4 +1,5 @@
-import type {User, PrismaClient } from '@prisma/client';
+import type { User, PrismaClient } from '@prisma/client';
+import * as argon2 from 'argon2';
 
 interface ResolverContext {
 	orm: PrismaClient;
@@ -11,18 +12,20 @@ export async function findAll(
 	return await context.orm.user.findMany();
 }
 
-
-export async function addUser(
+export async function createUser(
 	parent: unknown,
 	// Recojo de User el firstname email y password
-	{dto}:{dto: User},
-	// {dto}:{dto: Pick<User,'firstName'|'email'|'password'|'roles'>},
+	{ createUserDto }: { createUserDto: User },
+	// {createUserDto}:{createUserDto: Pick<User,'firstName'|'lastName'|'email'|'password'>},
 	context: ResolverContext
 ): Promise<User> {
-	const password = dto.password;
-	console.log('password ', password)
+	const encryptedPassword = await argon2.hash(createUserDto.password);
 	return await context.orm.user.create({
-		data:{...dto,createdAt: new Date()}
+		data: {
+			...createUserDto,
+			createdAt: new Date(),
+			password: encryptedPassword,
+		},
 	});
 }
 
@@ -36,4 +39,3 @@ export const resolver: Record<keyof User, (parent: User) => unknown> = {
 	createdAt: (parent) => parent.id,
 	updatedAt: (parent) => parent.id,
 };
-

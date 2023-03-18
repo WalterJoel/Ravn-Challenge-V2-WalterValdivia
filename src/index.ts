@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 
 // Get definitions of types from schema.graphql using loadFiles
 import { readFileSync } from 'fs';
-import  resolvers from './graphql/resolvers';
+import resolvers from './graphql/resolvers';
 import path from 'path';
 const orm = new PrismaClient();
 // Manejar el naming simple porque
@@ -16,7 +16,7 @@ const typeDefs = readFileSync(
 
 // Passing Prisma Client to server through the context key
 const server = new ApolloServer({
-	typeDefs,	
+	typeDefs,
 	resolvers,
 	context: {
 		orm,
