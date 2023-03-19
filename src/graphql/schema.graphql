@@ -6,6 +6,8 @@ type Query {
 	product: [User]
 	user: [User]
 	findOne(id: ID!): Product
+	seeProducts: [Product]
+	searchProductsByCategory(category: ProductCategorys): [Product]
 }
 type Mutation {
 	createUser(createUserDto: CreateUserDto!): User!
@@ -43,7 +45,7 @@ type Product {
 	id: ID!
 	name: String
 	description: String!
-	category: String
+	category: ProductCategorys!
 	price: Float
 	stock: Int
 	isVisible: Boolean
@@ -54,10 +56,15 @@ type Product {
 	#   Like        :Like[]
 	#   images      :[ProductImage]
 }
+enum ProductCategorys {
+	ZAPATILLAS
+	PLANTILLAS
+	SANDALIAS
+}
 # input type of createProduct
 input CreateProductDto {
 	name: String!
-	description: String
+	description: String!
 	category: String!
 	price: Float!
 	stock: Int!

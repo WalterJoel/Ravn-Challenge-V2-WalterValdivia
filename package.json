@@ -12,9 +12,13 @@
   },
   "dependencies": {
     "apollo-server": "^3.12.0",
+    "apollo-server-express": "^3.12.0",
     "argon2": "^0.30.3",
+    "express": "^4.18.2",
     "graphql": "^16.6.0",
+    "graphql-passport": "^0.6.5",
     "nodemon": "^2.0.21",
+    "passport": "^0.6.0",
     "prisma": "^4.11.0",
     "ts-node": "^10.9.1"
   },

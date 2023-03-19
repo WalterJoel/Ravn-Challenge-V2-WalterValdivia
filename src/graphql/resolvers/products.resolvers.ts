@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import type { Product } from '@prisma/client';
+import type { Product, ProductCategory} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -21,17 +21,13 @@ export async function createProduct(
 	});
 }
 
-// export async function findOne(
-// 	parent:unknown,
-// 	args:{id:string},
-// 	context: ResolverContext
-// ): Promise<Product|null> {
-// 	console.log('en find one ',args.id);
-// 	return await context.orm.product.findUnique({
-// 		where:{id:parseInt(args.id)},
-// 	});
-
-// }
+export async function seeProducts(
+	parent: unknown,
+	arg: unknown,
+	context: ResolverContext
+): Promise<Product[]> {
+	return await context.orm.product.findMany();
+}
 
 async function findOne(
 	parent: unknown,
@@ -98,3 +94,15 @@ export async function deleteProduct(
 	}
 	
 }
+
+export async function searchProductsByCategory(
+	_: any,
+	args:{categorys: (typeof ProductCategory)[keyof typeof ProductCategory]},
+	context: ResolverContext
+): Promise<Product[]> {
+	return await context.orm.product.findMany({
+		where: {
+			category:args.categorys
+			}		
+	});
+}		
