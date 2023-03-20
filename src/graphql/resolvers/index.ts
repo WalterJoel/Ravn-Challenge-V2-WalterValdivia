@@ -13,8 +13,8 @@ export default {
 		},
 		user: user.findAll,
 		// findOne:product.findOne
-		seeProducts:product.seeProducts,
-		searchProductsByCategory:product.searchProductsByCategory
+		seeProducts: product.seeProducts,
+		searchProductsByCategory: product.searchProductsByCategory,
 	},
 	Mutation: {
 		createUser: user.createUser,

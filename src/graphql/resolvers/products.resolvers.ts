@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import type { Product, ProductCategory} from '@prisma/client';
+import type { Product, ProductCategory } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -89,20 +89,19 @@ export async function deleteProduct(
 				id: parseInt(args.id),
 			},
 		});
-	} catch (error:any) {
+	} catch (error: any) {
 		throw error.message;
 	}
-	
 }
 
 export async function searchProductsByCategory(
 	_: any,
-	args:{categorys: (typeof ProductCategory)[keyof typeof ProductCategory]},
+	args: { categorys: (typeof ProductCategory)[keyof typeof ProductCategory] },
 	context: ResolverContext
 ): Promise<Product[]> {
 	return await context.orm.product.findMany({
 		where: {
-			category:args.categorys
-			}		
+			category: args.categorys,
+		},
 	});
-}		
+}

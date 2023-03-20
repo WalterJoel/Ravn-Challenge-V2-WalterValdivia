@@ -7,9 +7,6 @@
 // 	orm: PrismaClient;
 // }
 
-
-
-
 // export async function createProduct(
 // 	parent: unknown,
 // 	{ createProductDto }: { createProductDto: Cart},
