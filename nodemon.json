@@ -3,7 +3,8 @@
   "watch": [
     "src/**/*.js",
     "src/graphql/schema.graphql",
-    "src/graphql/resolvers"
+    "src/graphql/resolvers",
+    "src/permissions"
   ],
   "ext": "js,json,graphql,ts"
 }

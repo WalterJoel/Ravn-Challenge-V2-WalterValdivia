@@ -11,6 +11,11 @@ import resolvers from './graphql/resolvers';
 import path from 'path';
 
 import app from './serverExpress'
+import { permissions } from './permissions'
+import { applyMiddleware } from 'graphql-middleware'
+/* To Do change makeExecutableSchema to new version */
+
+import {makeExecutableSchema} from 'graphql-tools'
 
 
 const orm = new PrismaClient();
@@ -18,17 +23,26 @@ const orm = new PrismaClient();
 const httpServer = http.createServer(app)
 const port = process.env.PORT || 4000
 
+
+
 const typeDefs = readFileSync(
 	path.join(__dirname, 'graphql/schema.graphql'),
 	'utf-8'
 );
 
 // Passing Prisma Client to server through the context key
-
+const schema = applyMiddleware(
+	makeExecutableSchema({
+	  typeDefs,
+	  resolvers
+	}),
+	permissions
+  );
 void (async () => {
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers,
+		schema,
 		context:({ req }) => {
 			console.log('req user', req.user);
 			return {orm,user:req.user}

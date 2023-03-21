@@ -4,7 +4,8 @@ import path from 'path'
 import cors from 'cors'
 import { urlencoded, json } from 'body-parser'
 
-import auth, { login, currentUser } from './graphql/resolvers/auth.resolver'
+// By default authMiddleware
+import auth, { signIn } from './graphql/resolvers/auth.resolver'
 
 export const app = express()
 
@@ -15,7 +16,6 @@ app.use(urlencoded({ extended: false }))
 app.use(auth)
 
 // Auth Routes
-app.post('/api/login', json(), login)
-app.get('/api/user/current', currentUser)
+app.post('/api/signIn', json(), signIn)
 
 export default app;

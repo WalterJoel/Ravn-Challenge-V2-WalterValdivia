@@ -10,10 +10,12 @@ type Query {
 	searchProductsByCategory(category: ProductCategorys): [Product]
 }
 type Mutation {
-	createUser(createUserDto: CreateUserDto!): User!
-	createProduct(createProductDto: CreateProductDto!): Product!
-	updateProduct(id: ID!, updateProductDto: UpdateProductDto!): Product!
+	signUp(createUserDto: CreateUserDto!): User!
+	signOut: Message!
+	createProduct(createProductDto: CreateProductDto!): Product
+	updateProduct(id: ID!, updateProductDto: UpdateProductDto!): Product
 	deleteProduct(id: ID!): Product
+	# forgotPassword(forgotPasswordDto: ForgotPasswordDto!):
 }
 
 # DTO or INPUT for Create User
@@ -21,7 +23,7 @@ type Mutation {
 input CreateUserDto {
 	email: String!
 	firstName: String!
-	lastName: String
+	lastName: String!
 	password: String!
 	roles: [UserRole]!
 }
@@ -29,8 +31,8 @@ input CreateUserDto {
 type User {
 	id: ID!
 	email: String!
-	firstName: String
-	lastName: String
+	firstName: String!
+	lastName: String!
 	password: String!
 	roles: [UserRole]!
 	createdAt: DateTime
@@ -60,6 +62,9 @@ enum ProductCategorys {
 	ZAPATILLAS
 	PLANTILLAS
 	SANDALIAS
+}
+type Message {
+	message: String!
 }
 # input type of createProduct
 input CreateProductDto {

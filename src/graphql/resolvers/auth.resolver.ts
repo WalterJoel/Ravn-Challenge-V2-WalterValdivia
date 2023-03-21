@@ -1,59 +1,43 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/no-namespace */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { Request, RequestHandler } from 'express'
 import { PrismaClient } from '@prisma/client'
-import type{ User } from '@prisma/client'
 import { compare } from 'bcrypt'
 import { TextEncoder } from 'util'
 import { SignJWT, jwtVerify } from 'jose'
+import {AuthenticationError} from 'apollo-server-express'
+ 
 
-declare global {
-  namespace Express {
-    interface User {
-      id: number
-    }
-    interface Request {
-      user?: Express.User
-    }
-  }
-}
 
-interface UserJwtPayload {
-  id: number // The user wId
-  iat: number // Issued at
-  exp: number // Expire time
-}
-
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'nunca pares de aprender'
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "Ravn Challenge Secret Key Token"
 
 const orm = new PrismaClient()
 
 /**
- * Login with redirect support.
- *
- * The response will be redirected to the given `redirect` value if any.
+ * This function takes in a user's email and password, checks if the user exists, 
+   * Only if user exists and if the password is valid, it signs a JWT token with the user's information,
+   * role, and id, and returns the token and the user
+ * @param req 
+ * @param res 
+ * @param next continue with the stack of Express
  */
-export const login: RequestHandler = async (req, res, next) => {
-  const { username, password } = req.body
-  console.log('user')
+export const signIn: RequestHandler = async (req, res, next) => {
+  const { email, password } = req.body
 
   try {
-    console.log('triyng')
-    const user = await orm.user.findUnique({ where: { email: "ss" } })
-    console.log('user: ', user)
+    /* Using shorthand-object in parameter for email */ 
+    const user = await orm.user.findUnique({ where: { email} })
     if (!user) {
-      throw new Error()
+      throw new AuthenticationError('User not found')
     }
 
-    // const isValid = await compare(password, user.password)
+    const isValid = await compare(password, user.password)
 
-    // if (!isValid) {
-    //   throw new Error()
-    // }
-
-    const token = await new SignJWT({ id: user.id })
+    if (!isValid) {
+      throw new AuthenticationError('Incorrect password')
+    }
+    /* Signing Token with id, email and role user */
+    const token = await new SignJWT({id:user.id, email:user.email, roles:user.roles})
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime('2h')
@@ -61,7 +45,6 @@ export const login: RequestHandler = async (req, res, next) => {
 
     res.json({ token, username: user.email, id: user.id })
   } catch (err) {
-    console.log(err)
     res.sendStatus(401)
   }
 }
@@ -75,17 +58,19 @@ export const verifyToken = async (req: Request) => {
       token,
       new TextEncoder().encode(JWT_SECRET_KEY)
     )
-
-    return verified.payload as unknown as UserJwtPayload
+    return verified.payload
   } catch (e) {
     throw new Error('Invalid token')
   }
 }
 
+/**
+ * This function is used by express like middleware to verify in each request if a user is authenticated
+ */
 const authMiddleware: RequestHandler = async (req, res, next) => {
   try {
     const payload = await verifyToken(req)
-    req.user = { id: payload.id }
+    req.user = { id:payload.id, email:payload.email, roles:payload.roles}
   } catch (e) {
     // ignore
   } finally {
@@ -93,23 +78,5 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
   }
 }
 
+/* By default export authMiddleware */
 export default authMiddleware
-
-export const currentUser: RequestHandler = async (req, res) => {
-  try {
-    const userDetails = await orm.user.findUnique({
-      where: { id: req.user?.id },
-    })
-
-    if (!userDetails) {
-      throw new Error()
-    }
-
-    res.json({
-      id: userDetails.id,
-      username: userDetails.email,
-    })
-  } catch (e) {
-    res.sendStatus(401)
-  }
-}

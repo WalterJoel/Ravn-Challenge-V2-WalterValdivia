@@ -17,7 +17,8 @@ export default {
 		searchProductsByCategory: product.searchProductsByCategory,
 	},
 	Mutation: {
-		createUser: user.createUser,
+		signUp: user.signUp,
+		signOut: user.signOut,	
 		createProduct: product.createProduct,
 		updateProduct: product.updateProduct,
 		deleteProduct: product.deleteProduct,
