@@ -8,6 +8,8 @@ type Query {
 	findOne(id: ID!): Product
 	seeProducts: [Product]
 	searchProductsByCategory(category: ProductCategorys): [Product]
+	showClientOrders(userId: Int): [Order]
+	showMyOrder: [Order]
 }
 type Mutation {
 	signUp(createUserDto: CreateUserDto!): User!
@@ -15,6 +17,14 @@ type Mutation {
 	createProduct(createProductDto: CreateProductDto!): Product
 	updateProduct(id: ID!, updateProductDto: UpdateProductDto!): Product
 	deleteProduct(id: ID!): Product
+	disableProduct(id: Int!): Product
+	addProductToCart(addItemToCartDto: AddItemToCartDto!): CartItem
+	buyProducts(userId: Int!): Order
+	likeProduct(productId: Int!): Like
+	forgotPassword(email: String!): String
+	validateResetPassword(token: String!, newPassword: String!): User
+
+	# por ahora retorna un stirng, luego retornara un user modificdo
 	# forgotPassword(forgotPasswordDto: ForgotPasswordDto!):
 }
 
@@ -29,7 +39,7 @@ input CreateUserDto {
 }
 
 type User {
-	id: ID!
+	id: Int!
 	email: String!
 	firstName: String!
 	lastName: String!
@@ -37,6 +47,9 @@ type User {
 	roles: [UserRole]!
 	createdAt: DateTime
 	updatedAt: DateTime
+	Cart: Cart
+	Orders: [Order]
+	Like: [Like]
 }
 enum UserRole {
 	MANAGER
@@ -44,7 +57,7 @@ enum UserRole {
 }
 
 type Product {
-	id: ID!
+	id: Int!
 	name: String
 	description: String!
 	category: ProductCategorys!
@@ -53,9 +66,9 @@ type Product {
 	isVisible: Boolean
 	createdAt: DateTime
 	updatedAt: DateTime
-	#   CartItem    :CartItem[]
-	#   OrderItem   :OrderItem[]
-	#   Like        :Like[]
+	CartItem: [CartItem]
+	OrderItem: [OrderItem]
+	Like: [Like]
 	#   images      :[ProductImage]
 }
 enum ProductCategorys {
@@ -91,50 +104,55 @@ input UpdateProductDto {
 #   productId :Int
 # }
 
-# model Like {
-#   id        Int      @id @default(autoincrement())
-#   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-#   userId    Int
-#   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-#   productId Int
-#   createdAt DateTime @default(now())
-#   updatedAt DateTime @default(now())
-# }
+type Like {
+	id: Int!
+	user: User
+	userId: Int
+	product: Product
+	productId: Int
+	createdAt: DateTime
+	updatedAt: DateTime
+}
 
-# model Cart {
-#   id        Int        @id @default(autoincrement())
-#   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-#   userId    Int        @unique
-#   items     CartItem[]
-#   createdAt DateTime   @default(now())
-#   updatedAt DateTime   @default(now())
-# }
+type Cart {
+	id: Int!
+	user: User
+	userId: Int!
+	items: [CartItem]
+	createdAt: DateTime
+	updatedAt: DateTime
+}
 
-# model CartItem {
-#   id        Int     @id @default(autoincrement())
-#   cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
-#   cartId    Int
-#   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-#   productId Int
-#   quantity  Int
-# }
+type CartItem {
+	id: Int!
+	cart: Cart
+	cartId: Int!
+	product: Product
+	productId: Int!
+	quantity: Int!
+}
+# input type for addItemToCart
+input AddItemToCartDto {
+	productId: Int!
+	quantity: Int!
+}
 
-# model Order {
-#   id        Int         @id @default(autoincrement())
-#   user      User        @relation(fields: [userId], references: [id])
-#   userId    Int
-#   items     OrderItem[]
-#   total     Float
-#   createdAt DateTime    @default(now())
-#   updatedAt DateTime    @default(now())
-# }
+type Order {
+	id: Int!
+	user: User
+	userId: Int
+	items: [OrderItem]
+	total: Float
+	createdAt: DateTime
+	updatedAt: DateTime
+}
 
-# model OrderItem {
-#   id       :ID!
-#   order     :Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-#   orderId   :Int
-#   product   :Product @relation(fields: [productId], references: [id], onDelete: Restrict)
-#   productId :Int
-#   price     :Float
-#   quantity  :Int
-# }
+type OrderItem {
+	id: Int!
+	order: Order
+	orderId: Int!
+	product: Product
+	productId: Int!
+	price: Float!
+	quantity: Int!
+}
