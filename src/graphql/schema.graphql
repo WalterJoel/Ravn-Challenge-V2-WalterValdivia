@@ -5,7 +5,7 @@ type Query {
 	getProduct: Product
 	product: [User]
 	user: [User]
-	findOne(id: ID!): Product
+	findOne(id: Int!): Product
 	seeProducts: [Product]
 	searchProductsByCategory(category: ProductCategorys): [Product]
 	showClientOrders(userId: Int): [Order]
@@ -15,8 +15,8 @@ type Mutation {
 	signUp(createUserDto: CreateUserDto!): User!
 	signOut: Message!
 	createProduct(createProductDto: CreateProductDto!): Product
-	updateProduct(id: ID!, updateProductDto: UpdateProductDto!): Product
-	deleteProduct(id: ID!): Product
+	updateProduct(id: Int!, updateProductDto: UpdateProductDto!): Product
+	deleteProduct(id: Int!): Product
 	disableProduct(id: Int!): Product
 	addProductToCart(addItemToCartDto: AddItemToCartDto!): CartItem
 	buyProducts(userId: Int!): Order

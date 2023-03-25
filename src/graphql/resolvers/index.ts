@@ -3,8 +3,7 @@ import * as cart from './cart/cart.resolvers';
 import * as order from './orders/order.resolvers';
 import * as like from './likes/like.resolvers';
 import * as product from './products/products.resolvers';
-import * as auth from './auth/auth.resolver'
-
+import * as auth from './auth/auth.resolver';
 
 // Resolvers
 export default {
@@ -34,8 +33,8 @@ export default {
 		addProductToCart: cart.addProductToCart,
 		buyProducts: order.buyProducts,
 		likeProduct: like.likeProduct,
-		forgotPassword:auth.forgotPassword,
-		validateResetPassword:auth.validateResetPassword
+		forgotPassword: auth.forgotPassword,
+		validateResetPassword: auth.validateResetPassword,
 	},
 	// User: product.resolver,
 };

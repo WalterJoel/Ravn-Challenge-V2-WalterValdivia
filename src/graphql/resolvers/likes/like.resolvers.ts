@@ -1,13 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-import type { Like, User } from '@prisma/client';
+import type { Like } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 
-const prisma = new PrismaClient();
-
-interface ResolverContext {
-	orm: PrismaClient;
-	user: User | undefined;
-}
+import type { ResolverContext } from '../../context';
 
 // Esta funcion le falta validar si el producto existe y es visible
 export async function likeProduct(

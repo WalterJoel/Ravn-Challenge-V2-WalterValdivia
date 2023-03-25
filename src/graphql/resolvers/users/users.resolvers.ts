@@ -1,10 +1,8 @@
-import type { User, PrismaClient } from '@prisma/client';
+import type { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
-interface ResolverContext {
-	orm: PrismaClient;
-	user: Express.User | undefined;
-}
+import type { ResolverContext } from '../../context';
+
 export async function findAll(
 	parent: unknown,
 	arg: unknown,
@@ -18,7 +16,7 @@ export async function signUp(
 	parent: unknown,
 	// Recojo de User el firstname email y password
 	{ createUserDto }: { createUserDto: User },
-	// {createUserDto}:{createUserDto: Pick<User,'firstName'|'lastName'|'email'|'password'>},
+	// {createUseerDto}:{createUserDto: Pick<User,'firstName'|'lastName'|'email'|'password'>},
 	context: ResolverContext
 ): Promise<User> {
 	const user = await context.orm.user.findUnique({

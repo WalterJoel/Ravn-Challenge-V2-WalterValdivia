@@ -1,12 +1,10 @@
-import { PrismaClient } from '@prisma/client';
 import type { Product, ProductCategory } from '@prisma/client';
 import { GraphQLError } from 'graphql';
+import  type{ ResolverContext} from '../../context'
+import {prisma } from '../../context'
 
-const prisma = new PrismaClient();
 
-interface ResolverContext {
-	orm: PrismaClient;
-}
+
 
 export async function createProduct(
 	parent: unknown,
@@ -39,21 +37,78 @@ export async function disableProduct(
 	});
 }
 
+
+// export class PaginationResponseDto<T> {
+// 	items: T[];
+  
+// 	total: number;
+  
+// 	page: number;
+  
+// 	limit: number;
+  
+// 	hasNext: boolean;
+  
+// 	hasPrev: boolean;
+  
+// 	constructor(items: T[], total: number, page: number, limit: number) {
+// 	  this.items = items;
+// 	  this.total = total;
+// 	  this.page = page;
+// 	  this.limit = limit;
+// 	  this.hasNext = page * limit < total;
+// 	  this.hasPrev = page > 1;
+// 	}
+  
+// 	get totalPages(): number {
+// 	  return Math.ceil(this.total / this.limit);
+// 	}
+//   }
+
+
+// export class SearchProductQueryDto extends PartialType(PaginationQueryDto) {
+//   @IsOptional()
+//   category?: string;
+// }
+// export async function findAll(
+//     searchProductQueryDto: SearchProductQueryDto,
+//     conditions?: Record<string, any>,
+//   ): Promise<PaginationResponseDto<Product>> {
+//     const limit = searchProductQueryDto.|| 10;
+//     const page = searchProductQueryDto.page || 1;
+//     const items = await prisma.product.findMany({
+//       where: {
+//         ...conditions,
+//       },
+//       take: limit,
+//       skip: (page - 1) * limit,
+//       include: {
+//         images: true,
+//       },
+//     });
+//     const total = await prisma.product.count({
+//       where: {
+//         ...conditions,
+//       },
+//     });
+//     return new PaginationResponseDto(items, total, page, limit);
+//   }
+
 export async function seeProducts(
 	parent: unknown,
 	arg: unknown,
 	context: ResolverContext
 ): Promise<Product[]> {
-	return await context.orm.product.findMany();
+	return await prisma.product.findMany();
 }
 
 async function findOne(
 	parent: unknown,
-	args: { id: string }
+	args: { id: number }
 ): Promise<Product | null> {
 	console.log('en find one ', args.id);
 	return await prisma.product.findUnique({
-		where: { id: parseInt(args.id) },
+		where: { id: args.id },
 	});
 }
 /**
@@ -83,25 +138,13 @@ export async function checkProductStock(
 	// Si la cantidad que se solicita es igual o menor que el stock y ademas
 	if (product.stock < quantity) {
 		throw new GraphQLError(
-			`Invalid quantity, not enough stock for Product #${id}`,
-			{
-				extensions: {
-					code: 'BAD_REQUEST',
-					argumentName: 'id',
-				},
-			}
+			`Invalid quantity, not enough stock for Product #${id}`
 		);
 	}
 	// si la cantidad que solicita agregar al carrito no excede la cantidad ya existente
 	if (product.stock < quantityCartItem) {
 		throw new GraphQLError(
-			`Invalid quantity, you have ${quantityCartItem} products in cart, it exceeds quantity in stock`,
-			{
-				extensions: {
-					code: 'BAD_REQUEST',
-					argumentName: 'id',
-				},
-			}
+			`Invalid quantity, you have ${quantityCartItem} products in cart, it exceeds quantity in stock`
 		);
 	}
 	return product;
@@ -117,7 +160,7 @@ export async function checkProductStock(
 //  Falta validar que exista
 export async function updateProduct(
 	_: any,
-	args: { id: string; updateProductDto: Product },
+	args: { id: number; updateProductDto: Product },
 	context: ResolverContext
 ): Promise<Product> {
 	const findProduct = await findOne(_, { id: args.id });
@@ -127,7 +170,7 @@ export async function updateProduct(
 	}
 	return await context.orm.product.update({
 		where: {
-			id: parseInt(args.id),
+			id: args.id,
 		},
 		data: {
 			...args.updateProductDto,
@@ -143,7 +186,7 @@ export async function updateProduct(
 
 export async function deleteProduct(
 	_: any,
-	args: { id: string },
+	args: { id: number},
 	context: ResolverContext
 ): Promise<Product> {
 	const findProduct = await findOne(_, { id: args.id });
@@ -154,7 +197,7 @@ export async function deleteProduct(
 	try {
 		return await context.orm.product.delete({
 			where: {
-				id: parseInt(args.id),
+				id:args.id,
 			},
 		});
 	} catch (error: any) {

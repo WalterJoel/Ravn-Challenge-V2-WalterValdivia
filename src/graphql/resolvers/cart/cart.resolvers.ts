@@ -1,14 +1,9 @@
-import type { Cart, CartItem, User } from '@prisma/client';
-import { PrismaClient } from '@prisma/client';
+import type { Cart, CartItem } from '@prisma/client';
 import { checkProductStock } from '../products/products.resolvers';
 import { GraphQLError } from 'graphql';
 
-interface ResolverContext {
-	orm: PrismaClient;
-	// user: User | undefined;
-	user: User;
-}
-const prisma = new PrismaClient();
+import type { ResolverContext } from '../../context';
+import { prisma } from '../../context';
 
 /* Esta funcion deberia llamarse cada vez que se agrega un producto */
 export async function addProductToCart(
@@ -18,7 +13,6 @@ export async function addProductToCart(
 	// ): Promise<void> {
 ): Promise<CartItem> {
 	const currentUserId = context.user?.id;
-	console.log(currentUserId);
 	/* Aqui el current user ya tiene su carro y sino se crea uno para el */
 	const cart = await findOrCreateCart(currentUserId);
 	console.log('paso el create cary');

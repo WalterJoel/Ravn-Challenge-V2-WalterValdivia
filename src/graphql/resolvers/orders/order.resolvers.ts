@@ -1,13 +1,8 @@
-import { PrismaClient } from '@prisma/client';
-import type { Order, User , OrderItem} from '@prisma/client';
+import type { Order } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import { getItemsFromCart, clearCart } from '../cart/cart.resolvers';
-const prisma = new PrismaClient();
-
-interface ResolverContext {
-	orm: PrismaClient;
-	user: User | undefined;
-}
+import type { ResolverContext } from '../../context';
+import { prisma } from '../../context';
 
 export async function buyProducts(
 	parent: unknown,
@@ -83,12 +78,6 @@ export async function showMyOrder(
 // 	context: ResolverContext
 // ) {
 // 	const currentUserId = context.user?.id;
-	
-
-
-
-
-
 
 // 	return myOrders;
 // }

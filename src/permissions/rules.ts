@@ -9,7 +9,7 @@ export interface ResolverContext {
 
 export const isAuthenticated = rule({ cache: 'contextual' })(
 	async (parent, args, ctx: ResolverContext, info): Promise<any> => {
-		return ctx.user!==null ;
+		return ctx.user !== null;
 	}
 );
 

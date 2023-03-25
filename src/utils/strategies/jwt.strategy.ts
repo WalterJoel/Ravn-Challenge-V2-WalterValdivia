@@ -7,12 +7,11 @@ import { jwtVerify } from 'jose';
 const JWT_SECRET_KEY =
 	process.env.JWT_SECRET_KEY || 'Ravn Challenge Secret Key Token';
 
-export const verifyToken = async (req: Request|string) => {
+export const verifyToken = async (req: Request | string) => {
 	let token;
-	if(typeof (req)==='string'){
-		token = req
-	}
-	else{
+	if (typeof req === 'string') {
+		token = req;
+	} else {
 		const { authorization } = req.headers;
 		token = (authorization || '').replace('Bearer ', '');
 	}
