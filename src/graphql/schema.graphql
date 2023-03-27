@@ -81,7 +81,7 @@ type Message {
 input CreateProductDto {
 	name: String!
 	description: String!
-	category: String!
+	category: ProductCategorys!
 	price: Float!
 	stock: Int!
 }
@@ -90,7 +90,7 @@ input CreateProductDto {
 input UpdateProductDto {
 	name: String!
 	description: String
-	category: String!
+	category: ProductCategorys!
 	price: Float!
 	stock: Int!
 	isVisible: Boolean!

@@ -4,7 +4,7 @@ import path from 'path';
 import { mockDeep } from 'jest-mock-extended';
 import type { DeepMockProxy } from 'jest-mock-extended';
 import resolvers from '../graphql/resolvers';
-import type { ResolverContext, prisma } from '../graphql/context';
+import type { ResolverContext } from '../graphql/context';
 
 import type { PrismaClient, User } from '@prisma/client';
 
@@ -50,7 +50,7 @@ const newUser: CreateUserDto = {
 	email: 'User@ravn.com',
 	firstName: 'Juan',
 	lastName: 'Perez',
-	password: 'JPerez'
+	password: 'JPerez',
 };
 
 test('Should create a New User Client', async () => {
@@ -67,7 +67,7 @@ test('Should create a New User Client', async () => {
 			signUp(createUserDto: $createUserDto) {
 				id
 				firstName
-                roles
+				roles
 			}
 		}
 	`;
@@ -85,7 +85,7 @@ test('Should create a New User Client', async () => {
 			signUp: {
 				id: 11,
 				firstName: 'Juan',
-                roles:['CLIENT']
+				roles: ['CLIENT'],
 			},
 		},
 	});

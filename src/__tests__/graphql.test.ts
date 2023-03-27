@@ -5,8 +5,8 @@ import path from 'path';
 import { mockDeep } from 'jest-mock-extended';
 import type { DeepMockProxy } from 'jest-mock-extended';
 import resolvers from '../graphql/resolvers';
-import type{ ResolverContext} from '../graphql/context';
-import {prisma } from '../graphql/context';
+import type { ResolverContext } from '../graphql/context';
+import { prisma } from '../graphql/context';
 
 import type { PrismaClient, Product, User } from '@prisma/client';
 
@@ -60,7 +60,7 @@ test('should return a list of avos', async () => {
 	const query = gql`
 		{
 			seeProducts {
-				id,
+				id
 				name
 			}
 		}
@@ -76,10 +76,8 @@ test('should return a list of avos', async () => {
 		seeProducts: [
 			{
 				id: 9,
-				name:'product 1'
+				name: 'product 1',
 			},
 		],
 	});
-	
 });
-
