@@ -1,10 +1,8 @@
 scalar DateTime
 
 type Query {
-	info: String!
-	getProduct: Product
 	product: [User]
-	user: [User]
+	listAllUsers: [User]
 	findOne(id: Int!): Product
 	seeProducts: [Product]
 	searchProductsByCategory(category: ProductCategorys): [Product]
@@ -12,7 +10,7 @@ type Query {
 	showMyOrder: [Order]
 }
 type Mutation {
-	signUp(createUserDto: CreateUserDto!): User!
+	signUp(createUserDto: CreateUserDto!): User
 	signOut: Message!
 	createProduct(createProductDto: CreateProductDto!): Product
 	updateProduct(id: Int!, updateProductDto: UpdateProductDto!): Product

@@ -1,14 +1,12 @@
 import EasyGraphQLTester from 'easygraphql-tester';
-
 import { readFileSync } from 'fs';
 import path from 'path';
 import { mockDeep } from 'jest-mock-extended';
 import type { DeepMockProxy } from 'jest-mock-extended';
 import resolvers from '../graphql/resolvers';
-import type{ ResolverContext} from '../graphql/context';
-import {prisma } from '../graphql/context';
+import type { ResolverContext, prisma } from '../graphql/context';
 
-import type { PrismaClient, Product, User } from '@prisma/client';
+import type { PrismaClient, User } from '@prisma/client';
 
 import gql from 'graphql-tag';
 // import { beforeEach } from 'node:test';
@@ -40,46 +38,55 @@ beforeEach(() => {
 	context = mockContext as unknown as ResolverContext;
 });
 
-const productsDB: Product[] = [
-	{
-		id: 9,
-		name: 'product 1',
-		description: 'product 1 description',
-		category: 'ZAPATILLAS',
-		price: 10,
-		stock: 10,
-		isVisible: true,
+interface CreateUserDto {
+	email: string;
+	firstName: string;
+	lastName: string;
+	password: string;
+}
+
+const newUser: CreateUserDto = {
+	// id:10,
+	email: 'User@ravn.com',
+	firstName: 'Juan',
+	lastName: 'Perez',
+	password: 'JPerez'
+};
+
+test('Should create a New User Client', async () => {
+	mockContext.orm.user.create.mockResolvedValueOnce({
+		...newUser,
+		id: 11,
+		roles: ['CLIENT'],
 		createdAt: new Date(),
 		updatedAt: new Date(),
-	},
-];
+	});
 
-test('should return a list of avos', async () => {
-	mockContext.orm.product.findMany.mockResolvedValue(productsDB);
-	// Query to database using graphql
 	const query = gql`
-		{
-			seeProducts {
-				id,
-				name
+		mutation SignUp($createUserDto: CreateUserDto!) {
+			signUp(createUserDto: $createUserDto) {
+				id
+				firstName
+                roles
 			}
 		}
 	`;
-
-	const result = await tester.graphql(query, undefined, context);
-	expect(mockContext.orm.product.findMany).toHaveBeenCalledTimes(1);
-
-	console.log('result datas ', result.data);
-	//  expect(context.orm.product.findMany).toHaveBeenCalled();
-
-	expect(result.data).toEqual({
-		seeProducts: [
-			{
-				id: 9,
-				name:'product 1'
-			},
-		],
+	const result = await tester.graphql(query, undefined, context, {
+		createUserDto: {
+			roles: ['CLIENT'],
+			...newUser,
+		},
 	});
-	
-});
 
+	expect(mockContext.orm.user.create).toHaveBeenCalled();
+	expect(result).not.toHaveProperty('errors');
+	expect(result).toEqual({
+		data: {
+			signUp: {
+				id: 11,
+				firstName: 'Juan',
+                roles:['CLIENT']
+			},
+		},
+	});
+});

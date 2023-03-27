@@ -2,28 +2,45 @@ import type { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 import type { ResolverContext } from '../../context';
+import { GraphQLError } from 'graphql';
 
-export async function findAll(
+/**  This function list all users from the database, include attributes like orders which in turn
+ *  includes items too
+ * @returns all users from database
+ */
+export async function listAllUsers(
 	parent: unknown,
 	arg: unknown,
 	context: ResolverContext
 ): Promise<User[]> {
-	console.log(context.user, ' el email');
-	return await context.orm.user.findMany();
+	return await context.orm.user.findMany({
+		include: {
+			Orders: {
+				include: {
+					items: true,
+				},
+			},
+			Cart: true,
+			Like: true,
+		},
+	});
 }
 
+/** Function for register or sign up user
+ *
+ * @param createUserDto Set of fields to create a new user imported from schema GraphQL
+ * @returns new created user
+ */
 export async function signUp(
 	parent: unknown,
-	// Recojo de User el firstname email y password
 	{ createUserDto }: { createUserDto: User },
-	// {createUseerDto}:{createUserDto: Pick<User,'firstName'|'lastName'|'email'|'password'>},
 	context: ResolverContext
 ): Promise<User> {
 	const user = await context.orm.user.findUnique({
 		where: { email: createUserDto.email },
 	});
 	if (user) {
-		throw new Error('Email is already in use');
+		throw new GraphQLError('Email is already in use');
 	}
 	const salt = await bcrypt.genSalt(10);
 	const encryptedPassword = await bcrypt.hash(createUserDto.password, salt);
@@ -46,14 +63,3 @@ export function signOut(
 	}
 	return { message: 'User has been signed out' };
 }
-
-export const resolver: Record<keyof User, (parent: User) => unknown> = {
-	id: (parent) => parent.id,
-	email: (parent) => parent.email,
-	firstName: (parent) => parent.firstName,
-	lastName: (parent) => parent.lastName,
-	password: (parent) => parent.password,
-	roles: (parent) => parent.roles,
-	createdAt: (parent) => parent.id,
-	updatedAt: (parent) => parent.id,
-};

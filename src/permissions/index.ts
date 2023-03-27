@@ -5,7 +5,7 @@ import * as rules from './rules';
 export const permissions = shield(
 	{
 		Query: {
-			user: rules.isClient,
+			// listAllUsers: rules.isClient,
 			// seeProducts:rules.isClient
 		},
 		Mutation: {
@@ -17,3 +17,6 @@ export const permissions = shield(
 		allowExternalErrors: true,
 	}
 );
+
+/* SIGN UP
+   SIGN OUT  NO TIENE REGLAS PORQUE CUALQUIERA PUEDE REGISTRARSE  */

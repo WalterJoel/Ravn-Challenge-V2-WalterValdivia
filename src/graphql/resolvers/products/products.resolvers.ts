@@ -1,10 +1,7 @@
 import type { Product, ProductCategory } from '@prisma/client';
 import { GraphQLError } from 'graphql';
-import  type{ ResolverContext} from '../../context'
-import {prisma } from '../../context'
-
-
-
+import type { ResolverContext } from '../../context';
+import { prisma } from '../../context';
 
 export async function createProduct(
 	parent: unknown,
@@ -37,20 +34,19 @@ export async function disableProduct(
 	});
 }
 
-
 // export class PaginationResponseDto<T> {
 // 	items: T[];
-  
+
 // 	total: number;
-  
+
 // 	page: number;
-  
+
 // 	limit: number;
-  
+
 // 	hasNext: boolean;
-  
+
 // 	hasPrev: boolean;
-  
+
 // 	constructor(items: T[], total: number, page: number, limit: number) {
 // 	  this.items = items;
 // 	  this.total = total;
@@ -59,12 +55,11 @@ export async function disableProduct(
 // 	  this.hasNext = page * limit < total;
 // 	  this.hasPrev = page > 1;
 // 	}
-  
+
 // 	get totalPages(): number {
 // 	  return Math.ceil(this.total / this.limit);
 // 	}
 //   }
-
 
 // export class SearchProductQueryDto extends PartialType(PaginationQueryDto) {
 //   @IsOptional()
@@ -99,14 +94,13 @@ export async function seeProducts(
 	arg: unknown,
 	context: ResolverContext
 ): Promise<Product[]> {
-	return await prisma.product.findMany();
+	return await context.orm.product.findMany();
 }
 
 async function findOne(
 	parent: unknown,
 	args: { id: number }
 ): Promise<Product | null> {
-	console.log('en find one ', args.id);
 	return await prisma.product.findUnique({
 		where: { id: args.id },
 	});
@@ -186,7 +180,7 @@ export async function updateProduct(
 
 export async function deleteProduct(
 	_: any,
-	args: { id: number},
+	args: { id: number },
 	context: ResolverContext
 ): Promise<Product> {
 	const findProduct = await findOne(_, { id: args.id });
@@ -197,7 +191,7 @@ export async function deleteProduct(
 	try {
 		return await context.orm.product.delete({
 			where: {
-				id:args.id,
+				id: args.id,
 			},
 		});
 	} catch (error: any) {

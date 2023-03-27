@@ -8,15 +8,7 @@ import * as auth from './auth/auth.resolver';
 // Resolvers
 export default {
 	Query: {
-		info: () => 'This is mi entry work',
-		getProduct: () => {
-			return {
-				id: '123',
-				name: 'joel',
-				hobbie: 'tirar',
-			};
-		},
-		user: user.findAll,
+		listAllUsers: user.listAllUsers,
 		// findOne:product.findOne
 		seeProducts: product.seeProducts,
 		searchProductsByCategory: product.searchProductsByCategory,
