@@ -6,7 +6,14 @@ Challenge for interview RAVN
 
 In this project, we use API REST only for specific functions.
 
-Sign In Function
+* Sign In Function
+```bash
+*   POST
+  localhost:4000/api/signIn
+    
+```
+
+* Uplad Image Function
 ```bash
   
 ```
