@@ -2,6 +2,15 @@
 
 Challenge for interview RAVN
 
+## 💡API REST FUNCTIONS
+
+In this project, we use API REST only for specific functions.
+
+Sign In Function
+```bash
+  
+```
+
 ## 🌟 Features
 
 - To enforce code style, we use ESLINT standard as code style.
