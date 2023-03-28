@@ -6,12 +6,15 @@
   "author": "WalterJoel <walter.valdivia@ucsp.edu.pe>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon index.ts",
     "format": "prettier --write .",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest src/__tests__",
-    "start": "nodemon src/index.ts"
-  },
+    "copyfiles":"copyfiles src/graphql/schema.graphql ./dist",
+    "start": "node ./dist/index.js",
+    "clean": "rimraf ./dist",
+    "build": "prisma generate && yarn clean && tsc --build && yarn copyfiles"
+    },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.1",
     "@types/nodemailer": "^6.4.7",
@@ -39,6 +42,7 @@
     "@types/node": "^18.15.0",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
+    "copyfiles": "^2.4.1",
     "easygraphql-tester": "^6.0.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.7.0",
@@ -50,6 +54,7 @@
     "jest": "^27.0.x",
     "jest-mock-extended": "^2.0.4",
     "prettier": "^2.8.4",
+    "rimraf": "^4.4.1",
     "ts-jest": "^27.0.7",
     "typescript": "^4.9.5"
   },

@@ -16,7 +16,6 @@ import { applyMiddleware } from 'graphql-middleware';
 /* To Do change makeExecutableSchema to new version */
 
 import { makeExecutableSchema } from 'graphql-tools';
-import { GraphQLError } from 'graphql';
 
 const orm = new PrismaClient();
 // Manejar el naming simple porque
@@ -36,7 +35,7 @@ const schema = applyMiddleware(
 	}),
 	permissions
 );
-void (async () => {
+export default async function start(){
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers,
@@ -52,4 +51,4 @@ void (async () => {
 	server.applyMiddleware({ app, path: '/graphql' });
 
 	app.listen({ port });
-})();
+};

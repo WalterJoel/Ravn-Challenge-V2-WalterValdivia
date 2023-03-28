@@ -116,7 +116,6 @@ test('Should update a Product', async () => {
         price: 10,
         stock: 5
       };
-     
 
 	mockContext.orm.product.update.mockResolvedValueOnce({
 		id: 1,
@@ -133,6 +132,8 @@ test('Should update a Product', async () => {
 		) {
 			updateProduct(id: $updateProductId, updateProductDto: $updateProductDto) {
 				id
+				isVisible
+				category
 			}
 		}
 	`;
@@ -153,9 +154,43 @@ test('Should update a Product', async () => {
 		data: {
 			updateProduct: {
 				id: 1,
-				// isVisible: true,
-				// name: 'Test Product RAVN',
+				isVisible: true,
+				category:'PLANTILLAS'
 			},
 		},
 	});
 });
+
+
+describe('remove', () => {
+    const product: Product = {
+      id: 1,
+      name: 'Product 1',
+      description: 'product 1 description',
+      category: 'PLANTILLAS',
+      price: 10,
+      stock: 10,
+      isVisible: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    test('when product with ID exists', async() => {
+		// Genera los datos simulando una Mock DB
+		mockContext.orm.product.delete.mockResolvedValueOnce(product);
+		const query = gql`
+			mutation DeleteProduct($deleteProductId: Int!) {
+				deleteProduct(id: $deleteProductId) {
+					id
+				}
+				}
+			`;
+			// Aqui solo los campos que requiere el DTO 
+		const result = await tester.graphql(query, undefined, context, {
+			deleteProductId: 1
+		});
+		// expect(result).not.toHaveProperty('data')
+
+    });
+	
+    
+  });
