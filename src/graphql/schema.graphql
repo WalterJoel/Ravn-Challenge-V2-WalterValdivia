@@ -8,6 +8,11 @@ type Query {
 	searchProductsByCategory(category: ProductCategorys): [Product]
 	showClientOrders(userId: Int): [Order]
 	showMyOrder: [Order]
+	findProductsPagination(
+		conditions: ProductWhereInput
+		skip: Int
+		take: Int
+	): [Product]
 }
 type Mutation {
 	signUp(createUserDto: CreateUserDto!): User
@@ -153,4 +158,23 @@ type OrderItem {
 	productId: Int!
 	price: Float!
 	quantity: Int!
+}
+
+input ProductWhereInput {
+	name: StringFilterInput
+	price: Float
+}
+
+input StringFilterInput {
+	equals: String
+	in: [String]
+	notIn: [String]
+	lt: String
+	lte: String
+	gt: String
+	gte: String
+	contains: String
+	startsWith: String
+	endsWith: String
+	not: String
 }

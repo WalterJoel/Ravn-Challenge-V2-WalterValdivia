@@ -1,4 +1,4 @@
-import type { Product, ProductCategory } from '@prisma/client';
+import type { Product, ProductCategory, Prisma } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import type { ResolverContext } from '../../context';
 import { prisma } from '../../context';
@@ -34,60 +34,20 @@ export async function disableProduct(
 	});
 }
 
-// export class PaginationResponseDto<T> {
-// 	items: T[];
+// Utilizo el where input para traer la condiciones como contain and or not etc
+export async function findProductsPagination(
+    parent: unknown,
+  args: { conditions?: Prisma.ProductWhereInput; skip?: number; take?: number },
+  context: ResolverContext
+  ): Promise<Product[]> {
 
-// 	total: number;
-
-// 	page: number;
-
-// 	limit: number;
-
-// 	hasNext: boolean;
-
-// 	hasPrev: boolean;
-
-// 	constructor(items: T[], total: number, page: number, limit: number) {
-// 	  this.items = items;
-// 	  this.total = total;
-// 	  this.page = page;
-// 	  this.limit = limit;
-// 	  this.hasNext = page * limit < total;
-// 	  this.hasPrev = page > 1;
-// 	}
-
-// 	get totalPages(): number {
-// 	  return Math.ceil(this.total / this.limit);
-// 	}
-//   }
-
-// export class SearchProductQueryDto extends PartialType(PaginationQueryDto) {
-//   @IsOptional()
-//   category?: string;
-// }
-// export async function findAll(
-//     searchProductQueryDto: SearchProductQueryDto,
-//     conditions?: Record<string, any>,
-//   ): Promise<PaginationResponseDto<Product>> {
-//     const limit = searchProductQueryDto.|| 10;
-//     const page = searchProductQueryDto.page || 1;
-//     const items = await prisma.product.findMany({
-//       where: {
-//         ...conditions,
-//       },
-//       take: limit,
-//       skip: (page - 1) * limit,
-//       include: {
-//         images: true,
-//       },
-//     });
-//     const total = await prisma.product.count({
-//       where: {
-//         ...conditions,
-//       },
-//     });
-//     return new PaginationResponseDto(items, total, page, limit);
-//   }
+	return await context.orm.product.findMany({
+		// include: { attributes: true },
+		where: args.conditions,
+		skip: args.skip,
+		take: args.take,
+	  })
+  }
 
 export async function seeProducts(
 	parent: unknown,

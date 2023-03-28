@@ -14,6 +14,7 @@ export default {
 		searchProductsByCategory: product.searchProductsByCategory,
 		showClientOrders: order.showClientOrders,
 		showMyOrder: order.showMyOrder,
+		findProductsPagination: product.findProductsPagination
 	},
 	Mutation: {
 		signUp: user.signUp,
