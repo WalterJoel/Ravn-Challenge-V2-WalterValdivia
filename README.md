@@ -2,13 +2,13 @@
 
 Challenge for interview RAVN
 
-* USER WITH ROLE CLIENT
+* User with role Client
 ```bash
   localhost:4000/api/signIn
       
 ```
 
-* USER WITH ROLE MANAGER
+* User with role Manager
 ```bash
 {
 	"email":"manager@ravn.com",
@@ -25,7 +25,7 @@ In this project, we use API REST only for specific functions.
   localhost:4000/api/signIn
 ```
 
-* Uplad Image Function, we can user MULTIPART FORM 
+* Uplad Image Function, we can use MULTIPART FORM 
 ```bash
   name  : data /* required */
   value : File Chosen
