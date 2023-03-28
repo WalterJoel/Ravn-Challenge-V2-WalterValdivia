@@ -46,9 +46,11 @@ export default async function start(){
 		},
 		// context: ({ req }) => ({ orm, user: req.user }),
 		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+		introspection: true,
 	});
 	await server.start();
 	server.applyMiddleware({ app, path: '/graphql' });
 
 	app.listen({ port });
+	console.log('Listen on port: ', port )
 };
