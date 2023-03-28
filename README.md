@@ -2,20 +2,33 @@
 
 Challenge for interview RAVN
 
+* USER WITH ROLE CLIENT
+```bash
+  localhost:4000/api/signIn
+      
+```
+
+* USER WITH ROLE MANAGER
+```bash
+{
+	"email":"manager@ravn.com",
+	"password":"prueba"
+}
+  
+```
 ## 💡API REST FUNCTIONS
 
 In this project, we use API REST only for specific functions.
 
-* Sign In Function
+* Sign In Function POST
 ```bash
-*   POST
   localhost:4000/api/signIn
-    
 ```
 
-* Uplad Image Function
+* Uplad Image Function, we can user MULTIPART FORM 
 ```bash
-  
+  name  : data /* required */
+  value : File Chosen
 ```
 
 ## 🌟 Features
