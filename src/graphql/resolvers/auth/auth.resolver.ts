@@ -8,8 +8,10 @@ import { AuthenticationError } from 'apollo-server-express';
 import { transporter } from '../../../config/nodeMailer';
 import { GraphQLError } from 'graphql';
 import { verifyToken } from '../../../utils/strategies/jwt.strategy';
+import multer from 'multer'
 
 import { prisma } from '../../context';
+import path from 'path';
 
 const JWT_SECRET_KEY =
 	process.env.JWT_SECRET_KEY || 'Ravn Challenge Secret Key Token';
@@ -119,3 +121,57 @@ export async function validateResetPassword(
 		},
 	});
 }
+
+export const uploadImage: RequestHandler = async (req, res, next) => {
+
+		const storage = multer.diskStorage({
+			destination: function (request, file, callback) {
+				callback(null, './public/uploads');
+			},
+			filename: function (request, file, callback) {
+				console.log(file)
+				callback(null, file.originalname)
+			}
+		});
+		const upload = multer({ storage });
+		upload.single('data')
+		return res.send('ok')
+};
+
+
+export const storage = multer.diskStorage({
+    destination: function (request, file, callback) {
+        callback(null, './public/uploads');
+    },
+    filename: function (request, file, callback) {
+        callback(null, file.originalname.split(" ").join(""))
+    }
+});
+
+
+export const uploadImageToProduct: RequestHandler = async (req, res, next) => {
+	try{
+	const idProduct = req.params.idProduct;
+		console.log(idProduct);
+		console.log(req.file, ' file')
+		const product = await prisma.product.findUnique({ where: { id: parseInt(idProduct) } });
+		if (!product) {
+			return res.send('Product not found')
+		}
+		const filename = req.file?.filename;
+		await prisma.productImage.create({
+			data: {
+			  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+			  url: `${filename}`,
+			  product: {
+				connect: {
+				  id: product.id,
+				},
+			  },
+			},
+		  });
+		res.send('Imagen Cargada')
+	} catch (err) {
+		res.sendStatus(401);
+	}
+};

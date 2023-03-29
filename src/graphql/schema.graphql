@@ -72,7 +72,7 @@ type Product {
 	CartItem: [CartItem]
 	OrderItem: [OrderItem]
 	Like: [Like]
-	#   images      :[ProductImage]
+	images: [ProductImage]
 }
 enum ProductCategorys {
 	ZAPATILLAS
@@ -101,11 +101,11 @@ input UpdateProductDto {
 	isVisible: Boolean!
 }
 
-# type ProductImage {
-#   id        :Int
-#   url       :String
-#   productId :Int
-# }
+type ProductImage {
+	id: Int!
+	url: String!
+	productId: Int!
+}
 
 type Like {
 	id: Int!
