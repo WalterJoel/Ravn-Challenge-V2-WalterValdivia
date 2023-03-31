@@ -2,6 +2,22 @@
 
 Challenge for interview RAVN
 
+
+## 💡 GETTING STARTED
+
+You can get started with Amplication immediately with the hosted service at app.amplication.com
+
+Alternatively you can set up a local development environment with the instructions below
+
+See the Amplication Website or Amplication Docs for more details.
+
+In this project, we use API REST only for specific functions.
+
+* Sign In Function POST
+```bash
+  localhost:4000/api/signIn
+```
+
 * User with role Client
 ```bash
   localhost:4000/api/signIn
